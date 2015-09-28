@@ -1,0 +1,5 @@
+- name: copy full package list
+  copy: src=files/rpmpkg.list dest=/tmp/
+
+# - name: install packages
+#   yum: name=/tmp/rpmpkg.list

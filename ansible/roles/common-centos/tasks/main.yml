@@ -1,0 +1,38 @@
+---
+# Assumed new host have an internet connection and dns record
+
+# debugging
+#- fail: msg="{{ root_email }} {{ ssh_port }} {{ is_physical_host }} {{ is_kvm_guest }} {{ is_container }} {{ is_openvz_container }}"
+
+- fail: msg='Bailing out - this play is only for CentOS'
+  when: ansible_distribution != "CentOS"
+
+- name: disable selinux
+  lineinfile: dest={{ item }} regexp='^SELINUX=.*' line='SELINUX=disabled' state=present create=yes
+  with_items:
+    - /etc/sysconfig/selinux
+    - /etc/selinux/config
+  when: not (selinux|default(False))
+  tags: selinux
+
+- name: enable selinux
+  lineinfile: dest={{ item }} regexp='^SELINUX=.*' line='SELINUX=enforcing' state=present create=yes
+  with_items:
+    - /etc/sysconfig/selinux
+    - /etc/selinux/config
+  when: (selinux|default(False))
+  tags: selinux
+
+- name: clean default repos and keys
+  shell: "rm -f /etc/yum.repos.d/*; rm -f /etc/pki/rpm-gpg/*"
+  run_once: true
+  changed_when: false
+  ignore_errors: true
+
+- name: copy repo files
+  copy: src={{ item }} dest=/etc/yum.repos.d
+  with_fileglob: yum.repos.d/*
+
+- name: copy repo key files
+  copy: src={{ item }} dest=/etc/pki/rpm-gpg
+  with_fileglob: rpm-gpg/*
