@@ -23,16 +23,29 @@
   when: (selinux|default(False))
   tags: selinux
 
+# TODO: clean only once
 - name: clean default repos and keys
   shell: "rm -f /etc/yum.repos.d/*; rm -f /etc/pki/rpm-gpg/*"
-  run_once: true
   changed_when: false
   ignore_errors: true
 
 - name: copy repo files
   copy: src={{ item }} dest=/etc/yum.repos.d
   with_fileglob: yum.repos.d/*
+  notify: yum cleanup
 
 - name: copy repo key files
   copy: src={{ item }} dest=/etc/pki/rpm-gpg
   with_fileglob: rpm-gpg/*
+  notify: yum cleanup
+
+- name: install yum priorities
+  yum: name=yum-plugin-priorities
+  notify: yum cleanup
+
+- meta: flush_handlers
+
+#- name: install base packages
+#  yum: name={{ item }}
+#  with_items:
+#    - 

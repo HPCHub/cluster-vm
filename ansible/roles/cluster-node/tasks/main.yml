@@ -1,5 +1,6 @@
-- name: copy full package list
-  copy: src=files/rpmpkg.list dest=/tmp/
+- name: copy pkg list
+  copy: src=full_pkg.rpmlist dest=/tmp/
 
-# - name: install packages
-#   yum: name=/tmp/rpmpkg.list
+# TODO: only once
+- name: install base pkgs
+  shell: "xargs yum -y install < /tmp/full_pkg.rpmlist 2>&1 | tee /tmp/full_pkg_install.log.`date +%Y%m%d%H%M`"
