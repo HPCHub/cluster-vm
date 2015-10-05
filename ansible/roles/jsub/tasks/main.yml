@@ -1,0 +1,32 @@
+---
+- name: install tomcat6
+  yum: name=tomcat6
+  notify: restart tomcat
+  tags: jsub
+
+- name: add jsub tomcat config
+  copy: src=server.xml dest=/etc/tomcat6 owner=root group=root mode=0664
+  notify: restart tomcat
+  tags: jsub
+
+- name: create dirs
+  file: path=/var/lib/tomcat6/{{ item }} state=directory owner=tomcat group=tomcat mode=2775 recurse=yes
+  with_items: [ jsub, conveyor ]
+  notify: restart tomcat
+  tags: jsub
+
+- name: create links
+  file: dest=/usr/share/tomcat6/{{ item }} src=/var/lib/tomcat6/{{ item }} state=link
+  with_items: [ jsub, conveyor ]
+  notify: restart tomcat
+  tags: jsub
+
+- name: deploy apps
+  copy: src={{ item }}.war dest=/var/lib/tomcat6/{{ item }}/{{ item }}.war owner=tomcat group=tomcat
+  with_items: [ jsub, conveyor ]
+  notify: restart tomcat
+  tags: jsub
+
+- name: enable tomcat service
+  service: name=tomcat6 enabled=yes
+  tags: jsub
