@@ -2,3 +2,7 @@
   roles:
     - common-centos
     - cluster-node
+    # /srv/common soft + ldconfig /srv/common/lib cron + path magic
+    - jsub # + install console jsub
+    # install common openvpn cert (client for biodb)
+    # test biodb integration, find missing /data* soft and dbs, move to /srv ...
