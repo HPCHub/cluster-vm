@@ -521,8 +521,6 @@ libgpg-error
 libgsf
 libgssglue
 libgudev1
-libguestfs
-libguestfs-tools-c
 libhugetlbfs
 libhugetlbfs-utils
 libibcm
@@ -617,8 +615,6 @@ libuser
 libutempter
 libuuid
 libuuid-devel
-libvirt
-libvirt-client
 libvisual
 libvorbis
 libvpx
@@ -963,8 +959,6 @@ python-virtualenv
 python-werkzeug
 pytz
 qdox
-qemu-img
-qemu-kvm
 qhull
 ql2100-firmware
 ql2200-firmware
