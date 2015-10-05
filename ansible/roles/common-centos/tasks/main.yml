@@ -23,6 +23,10 @@
   when: (selinux|default(False))
   tags: selinux
 
+- name: disable firewall
+  service: name={{ item }} enabled=no state=stopped
+  with_items: [ iptables, ip6tables ]
+
 # TODO: clean only once
 - name: clean default repos and keys
   shell: "rm -f /etc/yum.repos.d/*; rm -f /etc/pki/rpm-gpg/*"
